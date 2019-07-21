@@ -154,7 +154,9 @@ class balebot{
 		if(array_key_exists('message',$this->data))
 		if(array_key_exists('reply_to_message',$this->data['message']))
 		if(array_key_exists('message_id',$this->data['message']['reply_to_message']))
-        return $this->data["message"]["reply_to_message"]["message_id"];
+			return $this->data["message"]["reply_to_message"]["message_id"];
+		else
+			return false;
     }
 	public function ReplyToUserID()
     {
@@ -162,7 +164,19 @@ class balebot{
 		if(array_key_exists('message',$this->data))
 		if(array_key_exists('reply_to_message',$this->data['message']))
 		if(array_key_exists('from',$this->data['message']['reply_to_message']))
-        return $this->data["message"]["reply_to_message"]["from"]["id"];
+			return $this->data["message"]["reply_to_message"]["from"]["id"];
+		else
+			return false;
+    }
+	public function ForwardFromID()
+    {
+        //$type = $this->getUpdateType();
+		if(array_key_exists('message',$this->data))
+		if(array_key_exists('forward_from',$this->data['message']))
+		if(array_key_exists('id',$this->data['message']['forward_from']))
+			return $this->data["message"]["forward_from"]["id"];
+		else
+			return false;
     }
 	public function ReplyToText()
     {
@@ -272,6 +286,7 @@ class balebot{
 		if(is_array($arr)){
 			if(isset($arr["chat_id"]) and isset($arr["text"])){
 				$arr["command"]='sendMessage';
+				$arr['text']=trim($arr['text']);
 				$return=$this->sendrequest($arr);
 			}else{
 				$return="undefined chatid or text or randomId or message_id";
