@@ -4,6 +4,7 @@
  * 
  * @author1 Saeb Khanzadeh <saeb.bnam@gmail.com>
  * first editation: 2019/07/15
+ * second editation: 2019/09/01
  */
 /*
 {"update_id":7,"message":{
@@ -90,7 +91,9 @@ class balebot{
     }
 	public function ChatID()
     {
-        //$type = $this->getUpdateType();
+		if(array_key_exists('message',$this->data))
+		if(array_key_exists('chat',$this->data['message']))
+		if(array_key_exists('id',$this->data['message']['chat']))
         return $this->data['message']['chat']['id'];
     }
 	public function ChatTitle()
@@ -145,8 +148,9 @@ class balebot{
     }
 	public function MessageID()
     {
-        //$type = $this->getUpdateType();
-        return $this->data["message"]["message_id"];
+		if(array_key_exists('message',$this->data))
+		if(array_key_exists('message_id',$this->data['message']))
+			return $this->data["message"]["message_id"];
     }
 	public function ReplyToMessageID()
     {
@@ -194,10 +198,17 @@ class balebot{
 		if(array_key_exists('text',$this->data['message']))
 			return $this->data['message']['text'];
     }
-	public function deleteMessage($chat_id,$message_id)
+	public function CallBack_Data()
     {
-		$data=array('chat_id' => $chat_id,'message_id' => $message_id , 'command'=>'deleteMessage');
-		return $this->sendrequest($data);
+		if(array_key_exists('callback_query',$this->data))
+			if(array_key_exists('data',$this->data['callback_query']))
+				return $this->data['callback_query']['data'];
+    }
+	public function deleteMessage($arr)
+    {
+		$arr['command']='deleteMessage';
+		//$data=array('chat_id' => $chat_id,'message_id' => $message_id , 'command'=>'deleteMessage');
+		return $this->sendrequest($arr);
 		/*$data_json=json_encode($data);
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
@@ -243,11 +254,12 @@ class balebot{
 	}
 	public function buildInlineKeyBoard(array $options)
     {
-        $replyMarkup = [
-            'inline_keyboard' => $options,
-        ];
-        $encodedMarkup = json_encode($replyMarkup, true);
-        return $encodedMarkup;
+        $replyMarkup = array (
+		  'inline_keyboard' => 
+			array ( $options )
+		);
+        $encodedMarkup = ($replyMarkup);
+        return $replyMarkup;
     }
 	 public function buildInlineKeyboardButton($text, $url = '', $callback_data = '', $switch_inline_query = null, $switch_inline_query_current_chat = null, $callback_game = '', $pay = '')
     {
@@ -265,7 +277,7 @@ class balebot{
         } elseif ($callback_game != '') {
             $replyMarkup['callback_game'] = $callback_game;
         } elseif ($pay != '') {
-            $replyMarkup['pay'] = $pay;
+            $replyMarkup['payload'] = $pay;
         }
         return $replyMarkup;
     }
