@@ -90,7 +90,9 @@ class balebot{
 		if(array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
 		if(array_key_exists('message',$tmp_data))
-		if(array_key_exists('photo',$tmp_data['message']))
+		if(array_key_exists('animation',$tmp_data['message']))
+        return 'animation';
+		elseif(array_key_exists('photo',$tmp_data['message']))
         return 'photo';
 		elseif(array_key_exists('video',$tmp_data['message']))
         return 'video';
