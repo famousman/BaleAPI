@@ -18,6 +18,22 @@ class balebot{
         $this->apiurl = "https://tapi.bale.ai/bot".$token;
         $this->data = $this->getData();
     }
+	public function setWebhook($url) // return all infromation by array.
+	{
+		$rawData = file_get_contents("https://tapi.bale.ai/".$this->token.'/setwebhook?url='.$url);
+		return json_decode($rawData, true);
+    }
+	public function deleteWebhook() // return all infromation by array.
+	{
+		$rawData = file_get_contents("https://tapi.bale.ai/".$this->token.'/deleteWebhook');
+		return json_decode($rawData, true);
+    }
+	public function getupdate() // return all infromation by array.
+	{
+		$rawData = file_get_contents("https://tapi.bale.ai/".$this->token.'/getupdate');
+		 $this->data =json_decode($rawData, true);
+		return $this->data;
+    }
 	public function getData() // return all infromation by array.
 	{
 		$rawData = file_get_contents('php://input');
@@ -26,9 +42,9 @@ class balebot{
 	public function username() // return username (without @) of the User.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('from',$tmp_data['message']))
 		if(array_key_exists('username',$tmp_data['message']['from']))
 			return $tmp_data['message']['from']['username'];
@@ -36,7 +52,7 @@ class balebot{
 	public function FirstName() // return FirstName of the User.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('from',$tmp_data['message']))
 		if(array_key_exists('first_name',$tmp_data['message']['from']))
 			return $tmp_data['message']['from']['first_name'];
@@ -44,16 +60,16 @@ class balebot{
 	public function LastName() // return Nothing only for skip wrong codes about lastname.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
         return "";
     }
 	public function UserID() // return ID of the User.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data)){
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data)){
 			return $tmp_data['callback_query']['from']['id'];
-		}elseif(array_key_exists('message',$tmp_data)){
+		}elseif(!is_null($tmp_data) and array_key_exists('message',$tmp_data)){
 			if(array_key_exists('from',$tmp_data['message']))
 			if(array_key_exists('id',$tmp_data['message']['from']))
 				return $tmp_data['message']['from']['id'];
@@ -62,9 +78,9 @@ class balebot{
 	public function ChatID() // return ID of the Chat.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data)){
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data)){
 			return $this->UserID();
-		}elseif(array_key_exists('message',$tmp_data)){
+		}elseif(!is_null($tmp_data) and array_key_exists('message',$tmp_data)){
 			if(array_key_exists('chat',$tmp_data['message']))
 			if(array_key_exists('id',$tmp_data['message']['chat']))
 				return $tmp_data['message']['chat']['id'];
@@ -73,23 +89,23 @@ class balebot{
 	public function ChatTitle() // return title of the Chat.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
         return $tmp_data['message']['chat']['title'];
     }
 	public function ChatTYPE() // return Type of the Chat.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
         return $tmp_data["message"]["chat"]['type'];
     }
 	public function MessageTYPE() // return Type of the message. 
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('animation',$tmp_data['message']))
         return 'animation';
 		elseif(array_key_exists('photo',$tmp_data['message']))
@@ -108,30 +124,32 @@ class balebot{
         return 'document';
 		elseif(array_key_exists('voice',$tmp_data['message']))
         return 'voice';
-		elseif(array_key_exists('latitude',$tmp_data['message']))
+		elseif(array_key_exists('location',$tmp_data['message']))
         return 'location';
 		elseif(array_key_exists('phone_number',$tmp_data['message']))
         return 'contact';
 		elseif(array_key_exists('text',$tmp_data['message']))
         return 'text';
+		elseif(array_key_exists('left_chat_member',$tmp_data['message']))
+        return 'left_chat_member';
 		else
         return 'null';
     }
 	public function MessageID() // return ID of the message.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('message_id',$tmp_data['message']))
 			return ($tmp_data["message"]["message_id"]);
     }
 	public function ReplyToMessageID() //if the message was replied to another one, it will return ID of message that replied to.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('reply_to_message',$tmp_data['message']))
 		if(array_key_exists('message_id',$tmp_data['message']['reply_to_message']))
 			return $tmp_data["message"]["reply_to_message"]["message_id"];
@@ -141,9 +159,9 @@ class balebot{
 	public function ReplyToUserID() //if the message was replied to another one, it will return ID of member who replied to.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('reply_to_message',$tmp_data['message']))
 		if(array_key_exists('from',$tmp_data['message']['reply_to_message']))
 			return $tmp_data["message"]["reply_to_message"]["from"]["id"];
@@ -153,9 +171,9 @@ class balebot{
 	public function ForwardFromID() //if the message was a forward message, it will return ID of member who sent.
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('forward_from',$tmp_data['message']))
 		if(array_key_exists('id',$tmp_data['message']['forward_from']))
 			return $tmp_data["message"]["forward_from"]["id"];
@@ -165,9 +183,9 @@ class balebot{
 	public function ReplyToText() // check is it a replied message or not. if it is, function will return the caption or the text
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('reply_to_message',$tmp_data['message']))
 		if(array_key_exists('text',$tmp_data['message']['reply_to_message']))
 			return $tmp_data["message"]["reply_to_message"]["text"];
@@ -177,20 +195,22 @@ class balebot{
 	public function Text() //return text or caption of the message
     {
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			$tmp_data=$tmp_data['callback_query'];
-		if(array_key_exists('message',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('message',$tmp_data))
 		if(array_key_exists('text',$tmp_data['message']))
 			return $tmp_data['message']['text'];
-		elseif(array_key_exists('caption',$tmp_data['message']))
+		elseif(!is_null($tmp_data) and array_key_exists('caption',$tmp_data['message']))
 			return $tmp_data['message']['caption'];
     }
 	public function CallBack_Data() //return content of the call back request
     {
+		$return2=null;
 		$tmp_data=$this->data;
-		if(array_key_exists('callback_query',$tmp_data))
+		if(!is_null($tmp_data) and !is_null($tmp_data) and array_key_exists('callback_query',$tmp_data))
 			if(array_key_exists('data',$tmp_data['callback_query']))
-				return $tmp_data['callback_query']['data'];
+				$return2=$tmp_data['callback_query']['data'];
+		return $return2;
     }
 	public function deleteMessage($arr) //return result after delete the message
     {
@@ -370,7 +390,7 @@ class balebot{
 				$arr['payload']=trim($arr['payload']);
 if(is_string($arr['prices']) or is_int($arr['prices']) or is_integer($arr['prices'])  or is_double($arr['prices'])  or is_float($arr['prices']) )
 					$arr['prices']=array(array("label" => "no lable", "amount" => $arr['prices']));
-				$return=$this->sendrequest($arr);
+				$return="this".$this->sendrequest($arr);
 			}else{
 				$return="undefined chatid or title or description or provider_token or prices or payload";
 			}			
@@ -475,22 +495,6 @@ if(is_string($arr['prices']) or is_int($arr['prices']) or is_integer($arr['price
 		}
 		return $return;
 	}
-	/*public function sendInvoice($arr)
-	{
-		if(is_array($arr)){
-			if(isset($arr["chat_id"]) and isset($arr["title"])){
-				if(isset($arr["reply_to_message_id"]))
-					$arr["reply_to_message_id"]=$arr["reply_to_message_id"];
-				$arr["command"]='sendMessage';
-				$return=$this->sendrequest($arr);
-			}else{
-				$return="undefined chatid or title";
-			}			
-		}else{
-			$return="it is not an array";
-		}
-		return $return;
-	}*/
 	private function sendrequest($arr)
 	{
 		$command=$arr['command'];
