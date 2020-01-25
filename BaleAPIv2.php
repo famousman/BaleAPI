@@ -132,6 +132,8 @@ class balebot{
         return 'text';
 		elseif(array_key_exists('left_chat_member',$tmp_data['message']))
         return 'left_chat_member';
+		elseif(array_key_exists('new_chat_members',$tmp_data['message']))
+        return 'new_chat_members';
 		else
         return 'null';
     }
@@ -165,6 +167,8 @@ class balebot{
 		if(array_key_exists('reply_to_message',$tmp_data['message']))
 		if(array_key_exists('from',$tmp_data['message']['reply_to_message']))
 			return $tmp_data["message"]["reply_to_message"]["from"]["id"];
+		elseif(array_key_exists('chat',$tmp_data['message']['reply_to_message']))
+			return $tmp_data["message"]["reply_to_message"]["chat"]["id"];
 		else
 			return false;
     }
@@ -418,6 +422,18 @@ if(is_string($arr['prices']) or is_int($arr['prices']) or is_integer($arr['price
 		$arr["command"]='getMe';
 		$return=$this->sendrequest($arr);
 	}
+	
+    public function buildKeyBoard(array $options, $onetime = false, $resize = false, $selective = true)
+    {
+        $replyMarkup = [
+            'keyboard'          => $options,
+            'one_time_keyboard' => $onetime,
+            'resize_keyboard'   => $resize,
+            'selective'         => $selective,
+        ];
+        $encodedMarkup = json_encode($replyMarkup, true);
+        return $encodedMarkup;
+    }
 	public function buildInlineKeyBoard(array $options)
     {
         $replyMarkup = array (
