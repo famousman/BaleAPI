@@ -32,4 +32,9 @@ $bot->sendContact($contenttmp);
 // send a Type of message to the chat environment
 $content=array("chat_id" =>$chat_id,"text" =>$bot->MessageTYPE());
 $bot->sendText($content);
+// send a text message with the keyboard
+$Keyboard = [['{keyboard text}' ]];
+$Keyboard = $balebot->buildKeyBoard($Keyboard, true, true);
+$contenttmp = array('chat_id' => $chat_id,"text"=>"text", 'reply_markup' =>$Keyboard);
+$bot->sendText($contenttmp);
 ?>
