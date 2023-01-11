@@ -37,4 +37,15 @@ $Keyboard = [['{keyboard text}' ]];
 $Keyboard = $balebot->buildKeyBoard($Keyboard, true, true);
 $contenttmp = array('chat_id' => $chat_id,"text"=>"text", 'reply_markup' =>$Keyboard);
 $bot->sendText($contenttmp);
+
+		$inlineKeyboardoption =	[
+			$balebot->buildInlineKeyBoardButton("title", '','callback text' ),
+		];
+
+// send inline keyboard
+		$Keyboard = $balebot->buildInlineKeyBoard($inlineKeyboardoption);
+$contenttmp = array('chat_id' => $chat_id,"text"=>"text", 'reply_markup' =>$Keyboard);
+$bot->sendText($contenttmp);
+
+
 ?>
