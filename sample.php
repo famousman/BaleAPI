@@ -33,19 +33,19 @@ $bot->sendContact($contenttmp);
 $content=array("chat_id" =>$chat_id,"text" =>$bot->MessageTYPE());
 $bot->sendText($content);
 // send a text message with the keyboard
-$Keyboard = [['{keyboard text}' ]];
+$Keyboard = [[ 'keyboard text' ]];
 $Keyboard = $balebot->buildKeyBoard($Keyboard, true, true);
 $contenttmp = array('chat_id' => $chat_id,"text"=>"text", 'reply_markup' =>$Keyboard);
 $bot->sendText($contenttmp);
 
-		$inlineKeyboardoption =	[
-			$balebot->buildInlineKeyBoardButton("title", '','callback text' ),
-		];
 
 // send inline keyboard
-		$Keyboard = $balebot->buildInlineKeyBoard($inlineKeyboardoption);
+$inlineKeyboardoption =	[
+	$balebot->buildInlineKeyBoardButton("title", '','callback text' ),
+];
+$Keyboard = $balebot->buildInlineKeyBoard($inlineKeyboardoption);
 $contenttmp = array('chat_id' => $chat_id,"text"=>"text", 'reply_markup' =>$Keyboard);
-$bot->sendText($contenttmp);
+$balebot->sendText($contenttmp);
 
 
 ?>
